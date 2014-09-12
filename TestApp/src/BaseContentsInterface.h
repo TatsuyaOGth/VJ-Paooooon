@@ -33,23 +33,23 @@ public:
     virtual void gotMessage(ofMessage msg){ }
     
     // update sound status
-    void updateSoundStatus(WAVE_TYPE * wave, LEVEL_TYPE * level)
+    void updateSoundStatus(WAVE_TYPE * wave, LEVEL_TYPE level)
     {
         mWave = wave;
         mLevel = level;
     }
+    virtual void getBang(){}
     
 protected:
-    WAVE_TYPE  *    getWavePtr() const { return  mWave; }
-    LEVEL_TYPE *    getLevelPtr() const { return mLevel; }
+    WAVE_TYPE *     getWavePtr() const { return  mWave; }
     WAVE_TYPE       getWave() const { return  *mWave; }
-    LEVEL_TYPE      getLevel() const { return *mLevel; }
+    LEVEL_TYPE      getLevel() const { return mLevel; }
     
     typedef BaseContentsInterface base;
     typedef list<shared_ptr<BaseAnimationUnit> >::iterator anm_it;
     
 private:
-    LEVEL_TYPE * mLevel;
+    LEVEL_TYPE mLevel;
     WAVE_TYPE  * mWave;
     
 };

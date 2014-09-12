@@ -2,6 +2,8 @@
 #include "PictureSlideShow.hpp"
 #include "GeometWave.hpp"
 
+#define FOR_SWITCHES for (deque<int>::iterator it = mContentsSwitches.begin(); it != mContentsSwitches.end(); it++)
+
 
 void testApp::setup(){
     ofSetWindowShape(common::width, common::height);
@@ -32,12 +34,12 @@ void testApp::setup(){
     mContents.push_back(shared_ptr<BaseContentsInterface>(new PictureSlideShow("")));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new GeometWave()));
     
-    mCurrentContents = 0;
-    mContents[mCurrentContents]->setup();
+    for (content_it it = mContents.begin(); it != mContents.end(); it++) (*it)->setup();
     
     //===============================================
     // sound input
     //===============================================
+#ifdef USE_OF_AUDIO_IN
     ofSetVerticalSync(true);
 	ofSetCircleResolution(80);
 	ofBackground(54, 54, 54);
@@ -54,17 +56,21 @@ void testApp::setup(){
     
 	int bufferSize = 256;
 	
-	
 	left.assign(bufferSize, 0.0);
 	right.assign(bufferSize, 0.0);
 	volHistory.assign(400, 0.0);
-	
 	bufferCounter	= 0;
 	drawCounter		= 0;
 	smoothedVol     = 0.0;
 	scaledVol		= 0.0;
-    
 	soundStream.setup(this, 0, 2, 44100, bufferSize, 4);
+#endif
+    
+#ifdef USE_OSC_RECEIVER
+    mReceiver.setup(RECEIVE_PORT);
+#endif
+    
+    if (MAIN_WAVE.empty()) MAIN_WAVE.assign(256, 0.0);
     
     //===============================================
     // init values
@@ -72,9 +78,8 @@ void testApp::setup(){
     mGuiPanel.setName("GUI");
     mParamGroup.setName("PARAMETERS");
     mParamGroup.add(mLevel.set("level", 0.0, 0.0, 1.0));
-    mParamGroup.add(mGain.set("gain", 1.0, 0.0, 30.0));
+    mParamGroup.add(mGain.set("gain", 1.0, 0.0, 10.0));
     mParamGroup.add(mSmoothLevel.set("smooth_level", 0.8, 0.0, 1.0));
-    mParamGroup.add(bClipping.set("clipping", false));
     mParamGroup.add(bDrawInputSoundStates.set("show_input_status", false));
     mGuiPanel.setup(mParamGroup);
     mGuiPanel.loadFromFile("settings.xml");
@@ -86,6 +91,7 @@ void testApp::update()
     //===============================================
     // sound input update
     //===============================================
+#ifdef USE_OF_AUDIO_IN
     //lets scale the vol up to a 0-1 range
 	scaledVol = ofMap(smoothedVol, 0.0, 0.17, 0.0, 1.0, true);
     
@@ -100,14 +106,43 @@ void testApp::update()
 	if( volHistory.size() >= 400 ){
 		volHistory.erase(volHistory.begin(), volHistory.begin()+1);
 	}
-
+#else
+    
+    //-----------------
+    // create wave
+    //-----------------
+    generateWave(MAIN_WAVE);
+    
+#endif
+    
+#ifdef USE_OSC_RECEIVER
+    bool didSendBang = false;
+    while (mReceiver.hasWaitingMessages()) {
+        ofxOscMessage m;
+        mReceiver.getNextMessage(&m);
+        if (m.getAddress() == "/level") {
+            switch (m.getArgType(0)) {
+                case OFXOSC_TYPE_INT32: mLevel = m.getArgAsInt32(0); break;
+                case OFXOSC_TYPE_FLOAT: mLevel = m.getArgAsFloat(0); break;
+                default: break;
+            }
+        }
+        if (m.getAddress() == "/bang" && !didSendBang) {
+            sendBang();
+            didSendBang = true;
+        }
+    }
+    MAIN_LEVEL *= mGain;
+#endif
     
     //===============================================
     // contents update
     //===============================================
-    mContents[mCurrentContents]->updateSoundStatus(&MAIN_WAVE, &MAIN_LEVEL);
-    mContents[mCurrentContents]->update();
-    mLevel = MAIN_LEVEL;
+    float tmpLv = MAIN_LEVEL;
+    FOR_SWITCHES {
+        mContents[*it]->updateSoundStatus(&MAIN_WAVE, tmpLv);
+        mContents[*it]->update();
+    }
 }
 
 void testApp::draw()
@@ -117,7 +152,7 @@ void testApp::draw()
     //===============================================
     mMainFbo.begin();
     ofBackground(0);
-    mContents[mCurrentContents]->draw();
+    FOR_SWITCHES { mContents[*it]->draw(); }
     mMainFbo.end();
     
     mPostGlitch->generateFx();
@@ -126,8 +161,10 @@ void testApp::draw()
     //===============================================
     // sound input draw
     //===============================================
+#ifdef USE_OF_AUDIO_IN
     ofSetColor(255, 255, 255);
     if (bDrawInputSoundStates) drawInputSoundStates();
+#endif
     
     //===============================================
     // gui draw
@@ -136,7 +173,8 @@ void testApp::draw()
     
     stringstream s;
     s << "fps: " << ofGetFrameRate() << endl;
-    s << "current content: " << mCurrentContents << endl;
+    s << "enable: ";
+    FOR_SWITCHES { s << *it << " "; } s<< endl;
     ofDrawBitmapString(s.str(), mGuiPanel.getPosition().x, mGuiPanel.getPosition().y + mGuiPanel.getHeight() + 20);
     
     // publish syphone server
@@ -235,11 +273,56 @@ void testApp::drawInputSoundStates()
 	ofDrawBitmapString(reportString, 32, 589);
 }
 
-void testApp::changeContents(const int num)
+void testApp::addContentsSwitch(const int add)
 {
-    mCurrentContents = num;
-    if (mCurrentContents < 0) mCurrentContents = mContents.size() - 1;
-    if (mCurrentContents >= mContents.size()) mCurrentContents = 0;
+    if (checkUnique(add)) {
+        mContentsSwitches.push_back(add);
+    }
+}
+
+void testApp::removeContentsSwitch(const int rm)
+{
+    FOR_SWITCHES {
+        if (rm == *it) {
+            mContentsSwitches.erase(it);
+            break;
+        }
+    }
+}
+
+void testApp::toggleContentsSwitch(const int toggle)
+{
+    if (checkUnique(toggle)) {
+        mContentsSwitches.push_back(toggle);
+    } else {
+        removeContentsSwitch(toggle);
+    }
+}
+
+bool testApp::checkUnique(const int num)
+{
+    if (num >= mContents.size()) return false;
+    FOR_SWITCHES {
+        if (num == *it) return false;
+    }
+    return true;
+}
+
+void testApp::sendBang()
+{
+    FOR_SWITCHES mContents[*it]->getBang();
+}
+
+void testApp::generateWave(WAVE_TYPE &wave)
+{
+    float y = 50;
+    for (int i = 0; i < MAIN_WAVE.size(); i++) {
+        MAIN_WAVE[i] = ofRandomf() * MAIN_LEVEL;
+
+//        MAIN_WAVE[i] = ofNoise(i, ofGetElapsedTimef()) * MAIN_LEVEL;
+
+//        MAIN_WAVE[i] = ofSignedNoise(i + ofGetElapsedTimef()) * MAIN_LEVEL;
+    }
 }
 
 
@@ -251,10 +334,11 @@ void testApp::keyPressed(int key)
     switch (key) {
         case 'f': ofToggleFullscreen(); break;
         case ' ': bDrawInputSoundStates = !bDrawInputSoundStates; break;
-        case OF_KEY_LEFT: changeContents(--mCurrentContents); break;
-        case OF_KEY_RIGHT: changeContents(++mCurrentContents); break;
-        case '1': mPostGlitch->toggleFx(OFXPOSTGLITCH_CONVERGENCE); break;
-        default: mContents[mCurrentContents]->keyPressed(key); break;
+
+        case '0': toggleContentsSwitch(0); break;
+        case '1': toggleContentsSwitch(1); break;
+        
+        default: FOR_SWITCHES mContents[*it]->keyPressed(key); break;
     }
     
 }
@@ -265,7 +349,7 @@ void testApp::keyPressed(int key)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void testApp::audioIn(float * input, int bufferSize, int nChannels)
 {
-	
+#ifdef USE_OF_AUDIO_IN
 	float curVol = 0.0;
 	
 	// samples are "interleaved"
@@ -295,5 +379,5 @@ void testApp::audioIn(float * input, int bufferSize, int nChannels)
 	smoothedVol += (-mSmoothLevel + 1) * curVol;
 	
 	bufferCounter++;
-	
+#endif
 }

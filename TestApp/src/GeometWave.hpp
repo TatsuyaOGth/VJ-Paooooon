@@ -52,4 +52,9 @@ public:
         
     }
     
+    void getBang()
+    {
+        
+    }
+    
 };

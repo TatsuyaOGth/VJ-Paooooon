@@ -10,7 +10,7 @@ namespace common
     static const float height = 800;
     
     // sound devise
-    static const int soundDeviceID = 2;
+    static const int soundDeviceID = 3;
 }
 
 

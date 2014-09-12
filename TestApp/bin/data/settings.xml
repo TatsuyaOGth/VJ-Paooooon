@@ -1,7 +1,7 @@
 <PARAMETERS>
-	<level>1</level>
-	<gain>2.55</gain>
-	<smooth_level>0.86</smooth_level>
+	<level>0.56</level>
+	<gain>1</gain>
+	<smooth_level>0</smooth_level>
 	<show_input_status>0</show_input_status>
 	<clipping>1</clipping>
 <PARAMETERS/>

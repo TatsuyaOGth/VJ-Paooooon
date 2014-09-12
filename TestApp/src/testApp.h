@@ -5,13 +5,22 @@
 #include "ofMain.h"
 #include "ofxSyphon.h"
 #include "ofxGui.h"
+#include "ofxOsc.h"
 #include "ofxPostGlitch.h"
 
 #include "BaseContentsInterface.h"
 
+// input mode
+//#define USE_OF_AUDIO_IN
+#define USE_OSC_RECEIVER
 
-#define MAIN_LEVEL  scaledVol
+#define MAIN_LEVEL  mLevel
 #define MAIN_WAVE   left
+
+#define CONTENT_LIST_TYPE vector
+
+static const int RECEIVE_PORT = 9000;
+
 
 
 class testApp : public ofBaseApp
@@ -30,7 +39,12 @@ public:
 private:
     
     void drawInputSoundStates();
-    void changeContents(const int num);
+    void addContentsSwitch(const int add);
+    void removeContentsSwitch(const int rm);
+    void toggleContentsSwitch(const int toggle);
+    bool checkUnique(const int num);
+    void sendBang();
+    void generateWave(WAVE_TYPE & wave);
     
     // syphone
 	ofxSyphonServer mServer;
@@ -38,9 +52,9 @@ private:
     ofFbo mMainFbo;
     
     // contents
-    vector<shared_ptr<BaseContentsInterface> > mContents;
-    typedef vector<shared_ptr<BaseContentsInterface> >::iterator content_it;
-    int mCurrentContents;
+    CONTENT_LIST_TYPE<shared_ptr<BaseContentsInterface> > mContents;
+    typedef CONTENT_LIST_TYPE<shared_ptr<BaseContentsInterface> >::iterator content_it;
+    deque<int> mContentsSwitches;
     
     // sount input
     ofSoundStream soundStream;
@@ -52,13 +66,15 @@ private:
     float smoothedVol;
     float scaledVol;
     
+    // osc
+    ofxOscReceiver mReceiver;
+    
     // gui
     ofxPanel mGuiPanel;
     ofParameterGroup mParamGroup;
     ofParameter<float> mLevel;
     ofParameter<float> mGain;
     ofParameter<float> mSmoothLevel;
-    ofParameter<bool> bClipping;
     ofParameter<bool> bDrawInputSoundStates;
     
     // post glitch
