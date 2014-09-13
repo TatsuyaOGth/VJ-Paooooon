@@ -77,6 +77,10 @@ protected:
     
     ofParameterGroup mParamGroup;
     
+    template<class T>
+    void setParameter(ofParameter<T> param) {
+        mParamGroup.add(param);
+    }
     
 private:
     LEVEL_TYPE mLevel;

@@ -71,7 +71,8 @@ public:
         pos.set(WIDTH * 0.5 ,HEIGHT * 0.5);
     }
     void update(){
-        size.set(audioVal*200.0,audioVal*200.0);
+        float max = WIDTH * 0.2;
+        size.set(audioVal * max, audioVal * max);
     }
     
     void draw(){
@@ -97,10 +98,60 @@ public:
         }
         if(drawMode == 0) ofDrawBox(0,0,0,size.x,size.y,size.z);
         else ofDrawSphere(0,0,0,size.x * 0.5);
-//        ofDrawSphere(0,0,0,size.x * 0.5);
         
         ofPopStyle();
         ofPopMatrix();
         
     }
 };
+
+
+class RotationArc
+{
+    int length;
+    float deg;
+    
+public:
+    ofVec2f pos;
+    ofVec2f pts;
+    float size;
+    float rot;
+    
+    RotationArc(int x, int y, int _length, float _size, float rotation):
+    pos(ofVec2f(x, y)),
+    size(_size),
+    rot(rotation)
+    {
+        setLength(_length);
+        deg = 0;
+    }
+    
+    void update()
+    {
+        deg += rot;
+    }
+    
+    void draw()
+    {
+        ofPushMatrix();
+        ofTranslate(pos);
+        ofRotate(deg, 0, 0, 1);
+        
+        ofBeginShape();
+        for (unsigned int i = 0; i < length; i++) {
+            float c = ((float)i / 360) * TWO_PI;
+            float x = sin(c) * size;
+            float y = cos(c) * size;
+            ofVertex(x, y);
+        }
+        ofEndShape(false);
+        
+        ofPopMatrix();
+    }
+    
+    void setLength(int v)
+    {
+        length = ofClamp(v, 0, 360);
+    }
+};
+

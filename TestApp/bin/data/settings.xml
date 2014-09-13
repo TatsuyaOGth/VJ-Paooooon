@@ -1,20 +1,25 @@
 <PARAMETERS>
-	<level>0.728583</level>
+	<level>0.812126</level>
 	<gain>1</gain>
 	<smooth_level>0</smooth_level>
-	<show_input_status>1</show_input_status>
+	<show_input_status>0</show_input_status>
 	<clipping>1</clipping>
 <PARAMETERS/>
-<group/>
+<group>
+		<color>255, 255, 255, 255</color>
+	</group>
 	<KzdPatternExample>
-		<pos>0, 1200, 0</pos>
-		<scale>0, 0, 224.401</scale>
-		<rotate>0, 0, 100</rotate>
+		<pos>0, 0, 1200</pos>
+		<scale>157.956, 242.115, 230.216</scale>
+		<rotate>0, 0, 0</rotate>
 		<bGlobalRotate>1</bGlobalRotate>
 		<thresh>0.362245</thresh>
-		<color>160, 131, 255, 216</color>
-		<bFIll>1</bFIll>
-		<bReverseTog>1</bReverseTog>
-		<isRand>1</isRand>
+		<color>69, 131, 255, 99</color>
+		<bFIll>0</bFIll>
+		<bReverseTog>0</bReverseTog>
+		<isRand>0</isRand>
 	</KzdPatternExample>
+<GeometWave>
+		<color>229, 225, 240, 255</color>
+	</GeometWave>
 </PARAMETERS>

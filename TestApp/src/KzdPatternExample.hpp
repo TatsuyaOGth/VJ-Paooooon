@@ -132,11 +132,8 @@ public:
     void getBang()
     {
         if(isRand) randomiseAll();
-        
         if(bFillTog) bFill.x = !bFill.x;
-        
         if(bReverseTog) bReverse = !bReverse;
-        
         if(bGlobalRotate){
             globalRotate.set(ofRandom(0,720),
                              ofRandom(0,720),
@@ -152,21 +149,21 @@ public:
         if(rand == 0)pos.set(ofVec3f(1200,0,0));
         else if(rand == 1)pos.set(ofVec3f(0,1200,0));
         else if(rand == 2)pos.set(ofVec3f(0,0,1200));
-        else if(rand == 3)pos.set(ofVec3f(ofRandom(50,200),ofRandom(50,200),ofRandom(50,200)));
+        else if(rand == 3)pos.set(ofVec3f(ofRandom(50,1200),ofRandom(50,1200),ofRandom(50,1200)));
         else if(rand == 4)pos.set(ofVec3f(0,0,0));
         
         rand = (int)ofRandom(0,5);
         if(rand == 0)rotate.set(ofVec3f(100,0,0));
-        else if(rand == 1)rotate.set(ofVec3f(0,100,0));
-        else if(rand == 2)rotate.set(ofVec3f(0,0,100));
-        else if(rand == 3)rotate.set(ofVec3f(ofRandom(0,100),ofRandom(0,100),ofRandom(0,100)));
+        else if(rand == 1)rotate.set(ofVec3f(0,360,0));
+        else if(rand == 2)rotate.set(ofVec3f(0,0,360));
+        else if(rand == 3)rotate.set(ofVec3f(ofRandom(0,360),ofRandom(0,360),ofRandom(0,360)));
         else if(rand == 4)rotate.set(ofVec3f(0,0,0));
         
         rand = (int)ofRandom(0,4);
         if(rand == 0)size.set(ofVec3f(ofRandom(100,300),0,0));
         else if(rand == 1)size.set(ofVec3f(0,ofRandom(100,300),0));
         else if(rand == 2)size.set(ofVec3f(0,0,ofRandom(100,300)));
-        else if(rand == 3)size.set(ofVec3f(ofRandom(0,300),ofRandom(0,300),ofRandom(0,300)));
+        else if(rand == 3)size.set(ofVec3f(ofRandom(0,300),ofRandom(0,1000),ofRandom(0,1000)));
         
     }
     

@@ -11,6 +11,12 @@ namespace common
     
     // sound devise
     static const int soundDeviceID = 3;
+    static const int bufferSize = 256;
+}
+
+namespace share
+{
+    static float elapsedTime = 0;
 }
 
 #define WIDTH   common::width

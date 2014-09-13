@@ -23,21 +23,8 @@ void testApp::setup(){
     
     mMainFbo.allocate(common::width, common::height);
     
-    //===============================================
-    // setup ofxPostGlitch
-    //===============================================
-    mPostGlitch = new ofxPostGlitch();
-    mPostGlitch->setup(&mMainFbo);
     
-    //===============================================
-    // create contents list
-    //===============================================
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new PictureSlideShow("")));
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new GeometWave()));
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new KzdPatternExample()));
-    
-    for (content_it it = mContents.begin(); it != mContents.end(); it++) (*it)->setup();
-    
+
     
     //===============================================
     // sound input
@@ -57,7 +44,7 @@ void testApp::setup(){
 	//if you want to set a different device id
 	soundStream.setDeviceID(common::soundDeviceID); //bear in mind the device id corresponds to all audio devices, including  input-only and output-only devices.
     
-	int bufferSize = 256;
+	int bufferSize = common::bufferSize;
 	
 	left.assign(bufferSize, 0.0);
 	right.assign(bufferSize, 0.0);
@@ -75,8 +62,31 @@ void testApp::setup(){
     
     if (MAIN_WAVE.empty()) MAIN_WAVE.assign(256, 0.0);
     
+
+    
     //===============================================
-    // init values
+    // setup ofxPostGlitch
+    //===============================================
+    mPostGlitch = new ofxPostGlitch();
+    mPostGlitch->setup(&mMainFbo);
+    
+    
+
+    //===============================================
+    // create contents list
+    //===============================================
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new PictureSlideShow("")));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new GeometWave()));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new KzdPatternExample()));
+    
+    for (content_it it = mContents.begin(); it != mContents.end(); it++) {
+        (*it)->updateSoundStatus(&MAIN_WAVE, MAIN_LEVEL);
+        (*it)->setup();
+    }
+    
+    
+    //===============================================
+    // setup GUI
     //===============================================
     mGuiPanel.setName("GUI");
     mParamGroup.setName("PARAMETERS");
@@ -94,10 +104,16 @@ void testApp::setup(){
     mGuiPanel.minimizeAll();
     
     mGuiPanel.loadFromFile("settings.xml");
+
 }
 
 void testApp::update()
 {
+    //===============================================
+    // update share values
+    //===============================================
+    share::elapsedTime = ofGetElapsedTimef();
+    
     //===============================================
     // sound input update
     //===============================================
