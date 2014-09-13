@@ -9,11 +9,6 @@
 
 #define FOR_SWITCHES for (deque<int>::iterator it = mContentsSwitches.begin(); it != mContentsSwitches.end(); it++)
 
-
-SHARED_IMAGES_CONTAINER_TYPE SharedData::mImages;
-SHARED_VIDEOS_CONTAINER_TYPE SharedData::mVideos;
-
-
 void testApp::setup()
 {
     ofSetWindowShape(common::width, common::height);
@@ -82,27 +77,8 @@ void testApp::setup()
     
 
     //===============================================
-    // setup shared data
+    // load texture resouces
     //===============================================
-//    SHARED_IMAGES_CONTAINER_TYPE * mImgs = SharedData::getImagesPtr();
-//    ofDirectory dir;
-//    if (dir.listDir("pictures") > 0) {
-//        for (int i = 0; i < dir.size(); i++) {
-//            ofImage img;
-//            if (img.loadImage(dir.getPath(i))) {
-//                mImgs->push_back(img);
-//                ofLogNotice() << "load image: " << dir.getPath(i);
-//            } else {
-//                ofLogError() << "faild load picture: " << dir.getPath(i);
-//                OF_EXIT_APP(1);
-//            }
-//        }
-//    } else {
-//        ofLogError() << "faild load pictures dir";
-//        OF_EXIT_APP(1);
-//    }
-//    dir.close();
-    
     ofDirectory dir;
     if (dir.listDir("pictures") > 0) {
         for (int i = 0; i < dir.size(); i++) {
@@ -120,8 +96,23 @@ void testApp::setup()
     }
     dir.close();
     
-    shuffleTexture();
+    if (dir.listDir("videos") > 0) {
+        for (int i = 0; i < dir.size(); i++) {
+            ofVideoPlayer vid;
+            if (vid.loadMovie(dir.getPath(i))) {
+                ofLogNotice() << "load video: " << dir.getPath(i);
+            } else {
+                ofLogError() << "faild load video: " << dir.getPath(i);
+                OF_EXIT_APP(1);
+            }
+        }
+    } else {
+        ofLogError() << "faild load videos dir";
+        OF_EXIT_APP(1);
+    }
+    dir.close();
     
+    shuffleTexture();
     
     //===============================================
     // create contents list
@@ -150,6 +141,8 @@ void testApp::setup()
     mParamGroup.add(mGain.set("gain", 1.0, 0.0, 10.0));
     mParamGroup.add(mSmoothLevel.set("smooth_level", 0.8, 0.0, 1.0));
     mParamGroup.add(bDrawInputSoundStates.set("show_input_status", false));
+    mParamGroup.add(bVideo.set("video_mode", false));
+    
     
     mGuiPanel.setup(mParamGroup);
     for (content_it it = mContents.begin(); it != mContents.end(); it++) {
@@ -449,6 +442,15 @@ void testApp::keyPressed(int key)
         case '7': toggleContentsSwitch(7); break;
         case '8': toggleContentsSwitch(8); break;
         case '9': toggleContentsSwitch(9); break;
+            
+        case 'v': {
+            bVideo ^= true; break;
+            if (bVideo) {
+//                for (vector<ofVideoPlayer>::iterator it = mVideos.begin(); it != mVideos.end(); it++) it->play();
+            } else {
+//                for (vector<ofVideoPlayer>::iterator it = mVideos.begin(); it != mVideos.end(); it++) it->stop();
+            }
+        }
         
         default: FOR_SWITCHES mContents[*it]->keyPressed(key); break;
     }
