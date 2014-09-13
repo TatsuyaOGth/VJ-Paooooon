@@ -1,7 +1,7 @@
 #N canvas 151 62 851 678 10;
 #X obj 116 622 s send;
 #X obj 110 154 vsl 15 128 0 1 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 5892 1;
+-1 -1 8425 1;
 #X obj 113 375 clip 0 1;
 #X floatatom 282 337 5 0 126 0 - - -;
 #X obj 249 419 onebang 1;
@@ -10,7 +10,7 @@
 -1 -1;
 #X obj 251 469 onebang 1;
 #X obj 128 154 vsl 15 128 0 1 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 6700 1;
+-1 -1 9000 1;
 #X obj 247 362 >;
 #X msg 113 400 send /level \$1;
 #X obj 295 618 sendOSC;
@@ -36,7 +36,7 @@
 #X floatatom 600 95 5 0 0 0 - - -;
 #X floatatom 530 281 5 0 0 0 - - -;
 #X obj 533 511 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 5892 1;
+-1 -1 8425 1;
 #X obj 530 255 peakamp~;
 #X floatatom 591 280 5 0 0 0 - - -;
 #X obj 591 254 peakamp~;
@@ -45,7 +45,7 @@
 #X obj 530 333 +;
 #X obj 530 356 sqrt;
 #X obj 618 404 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 1292 1;
+-1 -1 0 1;
 #X obj 530 432 f;
 #X obj 530 405 t b f;
 #X obj 530 457 expr ($f1*$f2)+((-$f2+1)*$f3);
@@ -61,7 +61,7 @@
 #X text 127 105 ON/OFF;
 #X obj 300 444 del 100;
 #X obj 206 110 hsl 65 15 0 1 0 0 \$0-smooth empty empty -2 -8 0 10
--1 -260097 -1 600 1;
+-1 -260097 -1 0 1;
 #X obj 611 376 r \$0-smooth;
 #X msg 208 517 send /bang bang;
 #X connect 1 0 9 0;

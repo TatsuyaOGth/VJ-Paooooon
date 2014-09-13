@@ -13,6 +13,9 @@ namespace common
     static const int soundDeviceID = 3;
 }
 
+#define WIDTH   common::width
+#define HEIGHT  common::height
+
 
 //==============================================================
 // share types

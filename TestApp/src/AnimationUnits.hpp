@@ -3,9 +3,6 @@
 #include "ofMain.h"
 
 
-#define FOR_ANIMATION_UNIT(it,list) (for(anm_it(it)=(list).begin();(it)!=(list).end();(it)++))
-
-
 class BaseAnimationUnit
 {
 protected:
@@ -22,6 +19,8 @@ public:
     
     bool isDied() { return bDied; }
 };
+
+
 
 class Perticle : public BaseAnimationUnit
 {

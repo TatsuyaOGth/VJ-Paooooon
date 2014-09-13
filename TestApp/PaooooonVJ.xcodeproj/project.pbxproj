@@ -92,6 +92,7 @@
 		3C99DB2413FB0B0900B3CA02 /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Syphon.framework; sourceTree = "<group>"; };
 		9101371119BF984B000920F8 /* GeometWave.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GeometWave.hpp; sourceTree = "<group>"; };
 		9139ABC619C36D0D003595CB /* KzdPatternExample.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = KzdPatternExample.hpp; sourceTree = "<group>"; };
+		9139ABC819C36EF1003595CB /* Objects.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Objects.hpp; sourceTree = "<group>"; };
 		9156443319BF9F3A00DE70C2 /* ofxBaseGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBaseGui.cpp; sourceTree = "<group>"; };
 		9156443419BF9F3A00DE70C2 /* ofxBaseGui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBaseGui.h; sourceTree = "<group>"; };
 		9156443519BF9F3A00DE70C2 /* ofxButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxButton.cpp; sourceTree = "<group>"; };
@@ -276,6 +277,7 @@
 			isa = PBXGroup;
 			children = (
 				91AD3EF319C0802A0056865B /* AnimationUnits.hpp */,
+				9139ABC819C36EF1003595CB /* Objects.hpp */,
 				91F766A019BDDD660095D436 /* BaseContentsInterface.h */,
 				91F7669F19BDDD2F0095D436 /* PictureSlideShow.hpp */,
 				9101371119BF984B000920F8 /* GeometWave.hpp */,

@@ -1,6 +1,7 @@
 #include "testApp.h"
 #include "PictureSlideShow.hpp"
 #include "GeometWave.hpp"
+#include "KzdPatternExample.hpp"
 
 #define FOR_SWITCHES for (deque<int>::iterator it = mContentsSwitches.begin(); it != mContentsSwitches.end(); it++)
 
@@ -33,8 +34,10 @@ void testApp::setup(){
     //===============================================
     mContents.push_back(shared_ptr<BaseContentsInterface>(new PictureSlideShow("")));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new GeometWave()));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new KzdPatternExample()));
     
     for (content_it it = mContents.begin(); it != mContents.end(); it++) (*it)->setup();
+    
     
     //===============================================
     // sound input
@@ -81,9 +84,16 @@ void testApp::setup(){
     mParamGroup.add(mGain.set("gain", 1.0, 0.0, 10.0));
     mParamGroup.add(mSmoothLevel.set("smooth_level", 0.8, 0.0, 1.0));
     mParamGroup.add(bDrawInputSoundStates.set("show_input_status", false));
-    mGuiPanel.setup(mParamGroup);
-    mGuiPanel.loadFromFile("settings.xml");
     
+    mGuiPanel.setup(mParamGroup);
+    for (content_it it = mContents.begin(); it != mContents.end(); it++) {
+        if ((*it)->getParamGroup().size() > 0) {
+            mGuiPanel.add((*it)->getParamGroup());
+        }
+    }
+    mGuiPanel.minimizeAll();
+    
+    mGuiPanel.loadFromFile("settings.xml");
 }
 
 void testApp::update()
@@ -171,8 +181,12 @@ void testApp::draw()
     //===============================================
     mGuiPanel.draw();
     
+    //===============================================
+    // infomation text
+    //===============================================
     stringstream s;
     s << "fps: " << ofGetFrameRate() << endl;
+    s << "num contents: " << countContents << endl;
     s << "enable: ";
     FOR_SWITCHES { s << *it << " "; } s<< endl;
     ofDrawBitmapString(s.str(), mGuiPanel.getPosition().x, mGuiPanel.getPosition().y + mGuiPanel.getHeight() + 20);
@@ -337,6 +351,10 @@ void testApp::keyPressed(int key)
 
         case '0': toggleContentsSwitch(0); break;
         case '1': toggleContentsSwitch(1); break;
+        case '2': toggleContentsSwitch(2); break;
+        case '3': toggleContentsSwitch(3); break;
+        case '4': toggleContentsSwitch(4); break;
+        case '5': toggleContentsSwitch(5); break;
         
         default: FOR_SWITCHES mContents[*it]->keyPressed(key); break;
     }

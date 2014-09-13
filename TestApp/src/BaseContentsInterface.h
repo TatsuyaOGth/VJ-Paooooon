@@ -1,18 +1,27 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxGui.h"
 #include "AnimationUnits.hpp"
+#include "Objects.hpp"
 #include "../../common.h"
 
-#define WIDTH   common::width
-#define HEIGHT  common::height
+#define LEVEL   getLevel()
+#define WAVE    getWave()
 
+static int countContents = 0;
 
 class BaseContentsInterface
 {
 public:
-    BaseContentsInterface():mLevel(0),mWave(0){}
-    virtual ~BaseContentsInterface(){}
+    BaseContentsInterface():mLevel(0),mWave(0)
+    {
+        countContents++;
+    }
+    virtual ~BaseContentsInterface()
+    {
+        countContents--;
+    }
     
     virtual void setup(){}
     virtual void update(){}
@@ -38,8 +47,26 @@ public:
         mWave = wave;
         mLevel = level;
     }
+    
     virtual void getBang(){}
     
+    inline string& getName()
+    {
+        if (mName.empty()) {
+            string ret = "";
+            const type_info& id = typeid(*this);
+            int stat;
+            char *name = abi::__cxa_demangle(id.name(), 0, 0, &stat);
+            if( stat == 0) {
+                mName += name;
+            }
+            free(name);
+        }
+        return mName;
+    }
+    
+    ofParameterGroup getParamGroup() { return mParamGroup; }
+
 protected:
     WAVE_TYPE *     getWavePtr() const { return  mWave; }
     WAVE_TYPE       getWave() const { return  *mWave; }
@@ -48,8 +75,50 @@ protected:
     typedef BaseContentsInterface base;
     typedef list<shared_ptr<BaseAnimationUnit> >::iterator anm_it;
     
+    ofParameterGroup mParamGroup;
+    
+    
 private:
     LEVEL_TYPE mLevel;
     WAVE_TYPE  * mWave;
+    string mName; ///< this class name
+};
+
+
+
+// template
+/*
+
+
+class * : public BaseContentsInterface
+{
+    
+public:
+    *()
+    {
+        
+    }
+    
+    void setup()
+    {
+        
+    }
+    
+    void update()
+    {
+        
+    }
+    
+    void draw()
+    {
+        
+    }
+    
+    void getBang()
+    {
+
+    }
     
 };
+
+*/
