@@ -34,4 +34,6 @@ public:
     ofxMtlMapping2D * _mapping;
     
     bool bMapping;
+    
+    ofVideoPlayer mVideo;
 };

@@ -98,8 +98,9 @@ void testApp::setup()
     
     if (dir.listDir("videos") > 0) {
         for (int i = 0; i < dir.size(); i++) {
-            ofVideoPlayer vid;
-            if (vid.loadMovie(dir.getPath(i))) {
+            mVideos.push_back(VIDEO_TYPE());
+            if (mVideos.back().loadMovie(dir.getPath(i))) {
+                mVideos.back().setVolume(0);
                 ofLogNotice() << "load video: " << dir.getPath(i);
             } else {
                 ofLogError() << "faild load video: " << dir.getPath(i);
@@ -110,8 +111,6 @@ void testApp::setup()
         ofLogError() << "faild load videos dir";
         OF_EXIT_APP(1);
     }
-    dir.close();
-    
     shuffleTexture();
     
     //===============================================
@@ -123,7 +122,7 @@ void testApp::setup()
     mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationSphere()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new Orientation()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationCube(&mTex)));
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new BoxPerticle(&mTex2, 200)));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new BoxPerticle(&mTex, 200)));
     
     for (content_it it = mContents.begin(); it != mContents.end(); it++) {
         (*it)->updateSoundStatus(&MAIN_WAVE, MAIN_LEVEL);
@@ -142,7 +141,7 @@ void testApp::setup()
     mParamGroup.add(mSmoothLevel.set("smooth_level", 0.8, 0.0, 1.0));
     mParamGroup.add(bDrawInputSoundStates.set("show_input_status", false));
     mParamGroup.add(bVideo.set("video_mode", false));
-    
+    mParamGroup.add(mSelVideo.set("select_video", 0, 0, mVideos.size() - 1));
     
     mGuiPanel.setup(mParamGroup);
     for (content_it it = mContents.begin(); it != mContents.end(); it++) {
@@ -162,6 +161,22 @@ void testApp::update()
     // update share values
     //===============================================
     share::elapsedTime = ofGetElapsedTimef();
+    
+    if (bVideo) {
+        if (mVideos[mSelVideo].isPaused()) mVideos[mSelVideo].play();
+        mVideos[mSelVideo].update();
+        
+        ofPixelsRef px = mVideos[mSelVideo].getPixelsRef();
+        if (!mTex.isAllocated() || mTex.getWidth() != px.getWidth() || mTex.getHeight() != px.getHeight()) {
+            mTex.clear();
+            mTex.allocate(px);
+            mTex.loadData(mVideos[mSelVideo].getPixelsRef());
+        } else {
+            mTex.loadData(mVideos[mSelVideo].getPixelsRef());
+        }
+    } else {
+        if (mVideos[mSelVideo].isPlaying()) mVideos[mSelVideo].stop();
+    }
     
     //===============================================
     // sound input update
@@ -261,6 +276,7 @@ void testApp::draw()
     
     // publish syphone server
     mServer.publishTexture(&mMainFbo.getTextureReference());
+    
 }
 
 void testApp::exit()
@@ -398,16 +414,12 @@ void testApp::sendBang()
 
 void testApp::shuffleTexture()
 {
-    mTex.clear();
-    mTex2.clear();
-    
-    int rd = ofRandom(mImages.size());
-    mTex.allocate(mImages[rd].getWidth(), mImages[rd].getHeight(), GL_RGB);
-    mTex.loadData(mImages[rd].getPixelsRef());
-    
-    rd = ofRandom(mImages.size());
-    mTex2.allocate(mImages[rd].getWidth(), mImages[rd].getHeight(), GL_RGB);
-    mTex2.loadData(mImages[rd].getPixelsRef());
+    if (!bVideo) {
+        int rd = ofRandom(mImages.size());
+        mTex.clear();
+        mTex.allocate(mImages[rd].getPixelsRef());
+        mTex.loadData(mImages[rd].getPixelsRef());
+    }
 }
 
 void testApp::generateWave(WAVE_TYPE &wave)
@@ -443,14 +455,7 @@ void testApp::keyPressed(int key)
         case '8': toggleContentsSwitch(8); break;
         case '9': toggleContentsSwitch(9); break;
             
-        case 'v': {
-            bVideo ^= true; break;
-            if (bVideo) {
-//                for (vector<ofVideoPlayer>::iterator it = mVideos.begin(); it != mVideos.end(); it++) it->play();
-            } else {
-//                for (vector<ofVideoPlayer>::iterator it = mVideos.begin(); it != mVideos.end(); it++) it->stop();
-            }
-        }
+        case 'v': bVideo ^= true; break;
         
         default: FOR_SWITCHES mContents[*it]->keyPressed(key); break;
     }

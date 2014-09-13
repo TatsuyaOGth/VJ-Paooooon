@@ -78,15 +78,17 @@ private:
     ofParameter<float> mSmoothLevel;
     ofParameter<bool> bDrawInputSoundStates;
     ofParameter<bool> bVideo;
+    ofParameter<int> mSelVideo;
     
     // post glitch
     ofxPostGlitch * mPostGlitch;
     
     // textures
+#define VIDEO_TYPE ofVideoPlayer
     vector<ofImage> mImages;
-    vector<ofVideoPlayer> mVideos;
+    vector<VIDEO_TYPE> mVideos;
     ofTexture mTex;
-    ofTexture mTex2;
+
 };
 
 #endif

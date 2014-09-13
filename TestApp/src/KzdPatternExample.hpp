@@ -9,7 +9,7 @@ class KzdPatternExample : public BaseContentsInterface
     static const int objectNum = 100; //何個描画するか。
     
 //    bool rotAxisMode;
-    bool bReverse;
+//    bool bReverse;
     
     
     ofParameter<ofVec3f> pos;
@@ -20,7 +20,6 @@ class KzdPatternExample : public BaseContentsInterface
     ofParameter<bool> bFillTog;
     ofParameter<bool> bBackgroundChange;
 
-    ofPoint bFill;
     ofParameter<bool> bReverseTog;
     ofParameter<bool> isRand;
     
@@ -55,10 +54,6 @@ public:
     void update()
     {
         
-        if(bFill.x && ofGetFrameNum() % 5 == 0){
-            bFill.y = !bFill.y;
-        }
-        
         if(bGlobalRotate == false){
             globalRotate.set(0,0,0);
         }
@@ -68,13 +63,14 @@ public:
         
         
         //ここからはランダマイズされた値をインスタンスに突っ込んだりするよ！
-        float aVal = 1000;
-        if(bFill.y == 1)aVal = 30; //ofFillかましてると明る過ぎるので適当にアルファ下げるよ
+        int aVal = 255;
+//        if(bFill.y == 1)aVal = 30; //ofFillかましてると明る過ぎるので適当にアルファ下げるよ
+        if (bFillTog) aVal = 30;
         
         color.set(ofColor(color->r,color->g,color->b,(int)(LEVEL * aVal)));
         
         ofColor currentColor = color;
-        if(bReverse)currentColor.set(0,0,0,(int)(LEVEL * aVal));
+        if(bReverseTog)currentColor.set(0,0,0,(int)(LEVEL * aVal));
         
         float cVol = LEVEL * 0.06;
         
@@ -95,7 +91,7 @@ public:
             
             prims[i].color = currentColor;
             
-            prims[i].bFill = bFill.y;
+            prims[i].bFill = bFillTog;
 //            prims[i].rotAxisMode = rotAxisMode;
             prims[i].update();
         }
@@ -105,7 +101,7 @@ public:
     void draw()
     {
         ofPushStyle();
-        if(bReverse == false){
+        if(bReverseTog == false){
             ofBackground(0,0,0,0);
             ofEnableBlendMode(OF_BLENDMODE_ADD);
         }
@@ -132,8 +128,8 @@ public:
     void getBang()
     {
         if(isRand) randomiseAll();
-        if(bFillTog) bFill.x = !bFill.x;
-        if(bReverseTog) bReverse = !bReverse;
+        if(isRand) bFillTog = !bFillTog;
+        if(isRand) bReverseTog = !bReverseTog;
         if(bGlobalRotate){
             globalRotate.set(ofRandom(0,720),
                              ofRandom(0,720),
