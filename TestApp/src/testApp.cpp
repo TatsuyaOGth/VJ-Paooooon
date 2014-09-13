@@ -2,11 +2,14 @@
 #include "PictureSlideShow.hpp"
 #include "GeometWave.hpp"
 #include "KzdPatternExample.hpp"
+#include "RotationSphere.hpp"
+#include "Orientation.hpp"
 
 #define FOR_SWITCHES for (deque<int>::iterator it = mContentsSwitches.begin(); it != mContentsSwitches.end(); it++)
 
 
-void testApp::setup(){
+void testApp::setup()
+{
     ofSetWindowShape(common::width, common::height);
 	ofSetCircleResolution(60);
     
@@ -78,6 +81,9 @@ void testApp::setup(){
     mContents.push_back(shared_ptr<BaseContentsInterface>(new PictureSlideShow("")));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new GeometWave()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new KzdPatternExample()));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationSphere()));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new Orientation()));
+
     
     for (content_it it = mContents.begin(); it != mContents.end(); it++) {
         (*it)->updateSoundStatus(&MAIN_WAVE, MAIN_LEVEL);
@@ -97,7 +103,7 @@ void testApp::setup(){
     
     mGuiPanel.setup(mParamGroup);
     for (content_it it = mContents.begin(); it != mContents.end(); it++) {
-        if ((*it)->getParamGroup().size() > 0) {
+        if ((*it)->getParamGroup().size() > 0 && !(*it)->getName().empty()) {
             mGuiPanel.add((*it)->getParamGroup());
         }
     }
@@ -178,7 +184,9 @@ void testApp::draw()
     //===============================================
     mMainFbo.begin();
     ofBackground(0);
+    ofEnableAlphaBlending();
     FOR_SWITCHES { mContents[*it]->draw(); }
+    ofDisableAlphaBlending();
     mMainFbo.end();
     
     mPostGlitch->generateFx();

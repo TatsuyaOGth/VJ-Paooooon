@@ -89,16 +89,21 @@ private:
 };
 
 
-
+///////////////////////////////////////////////////////////////
 // template
+///////////////////////////////////////////////////////////////
 /*
 
+ 
+#pragma once
+ 
+#include "BaseContentsInterface.h"
 
-class * : public BaseContentsInterface
+class <# class name #> : public BaseContentsInterface
 {
     
 public:
-    *()
+    <# class name #>()
     {
         
     }

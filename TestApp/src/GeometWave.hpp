@@ -7,26 +7,27 @@ class GeometWave : public BaseContentsInterface
     list<shared_ptr<BaseAnimationUnit> > mPerticle;
     
     int mode;
-    float mBitPer;
     
     ofParameter<ofColor> mColor;
+    ofParameter<bool> bRandomCol;
     
-    vector<RotationArc *> mArcs;
+    vector<shared_ptr<RotationArc> > mArcs;
     
 public:
     GeometWave()
     {
         base::mParamGroup.setName(base::getName());
         base::setParameter(mColor.set("color", ofColor(255,255,255,255),ofColor(0,0,0,0),ofColor(255,255,255,255)));
+        base::setParameter(bRandomCol.set("random_color", false));
     }
     
     void setup()
     {
         mode = 0;
-        mBitPer = 0.15;
         
+        if (mArcs.size()) mArcs.clear();
         for (int i = 0; i < WAVE.size(); i++) {
-            mArcs.push_back(new RotationArc(300, 600, ofRandom(30, 180), 0, ofRandom(5, 20)));
+            mArcs.push_back(shared_ptr<RotationArc>(new RotationArc(300, 600, ofRandom(30, 180), 0, ofRandom(5, 20))));
         }
     }
     
@@ -37,7 +38,7 @@ public:
             if ((*it)->isDied()) mPerticle.erase(it);
         }
         
-        for (vector<RotationArc *>::iterator it = mArcs.begin(); it != mArcs.end(); it++) {
+        for (vector<shared_ptr<RotationArc> >::iterator it = mArcs.begin(); it != mArcs.end(); it++) {
             (*it)->update();
         }
     }
@@ -79,12 +80,16 @@ public:
     
     void randamPattern()
     {
-//        mBitPer = ofRandom(0.05, 0.3);
         mode = (int)ofRandom(5);
     }
     
     void drawPoint(int x, int y, float size, int i)
     {
+        if (bRandomCol) {
+            ofColor col;
+            col.setHsb(ofRandom(255), 255, 255);
+            ofSetColor(col);
+        }
         switch (mode) {
             default:
             case 0:
@@ -116,6 +121,14 @@ public:
                 mArcs[i]->pos.set(x, y);
                 mArcs[i]->size = size * 100;
                 mArcs[i]->draw();
+                break;
+                
+            case 4:
+                ofNoFill();
+                ofSetLineWidth(1);
+                ofLine(x, y, x, HEIGHT * 0.5);
+                ofLine(x-5, HEIGHT * 0.5, x+5, HEIGHT * 0.5);
+                ofLine(x-5, y, x+5, y);
                 break;
                 
         }

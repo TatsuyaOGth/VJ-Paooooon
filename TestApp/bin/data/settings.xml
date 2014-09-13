@@ -1,8 +1,8 @@
 <PARAMETERS>
-	<level>0.812126</level>
+	<level>0.412598</level>
 	<gain>1</gain>
 	<smooth_level>0</smooth_level>
-	<show_input_status>0</show_input_status>
+	<show_input_status>1</show_input_status>
 	<clipping>1</clipping>
 <PARAMETERS/>
 <group>
@@ -14,12 +14,23 @@
 		<rotate>0, 0, 0</rotate>
 		<bGlobalRotate>1</bGlobalRotate>
 		<thresh>0.362245</thresh>
-		<color>69, 131, 255, 99</color>
+		<color>69, 131, 255, 255</color>
 		<bFIll>0</bFIll>
 		<bReverseTog>0</bReverseTog>
 		<isRand>0</isRand>
 	</KzdPatternExample>
 <GeometWave>
 		<color>229, 225, 240, 255</color>
+	<random_color>0</random_color>
 	</GeometWave>
+<RotationSphere>
+		<resolution>5</resolution>
+	<color>255, 255, 255, 255</color>
+		<random_color>0</random_color>
+	</RotationSphere>
+<Orientation>
+		<speed>0.020699</speed>
+	<light_pos>0.249939, -243.399, 0</light_pos>
+		<light_direction>161.333, 3.89838, -89.8126</light_direction>
+	</Orientation>
 </PARAMETERS>

@@ -32,6 +32,7 @@
 		91786D6119C2A8D30031331C /* GeometWave.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 9101371119BF984B000920F8 /* GeometWave.hpp */; };
 		91786D6219C2A8F80031331C /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9177D4A119C232460023A9CE /* UdpSocket.cpp */; };
 		91AD3EF019C074430056865B /* ofxPostGlitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91AD3EEE19C074430056865B /* ofxPostGlitch.cpp */; };
+		91F1286319C4531C007C4AEB /* ofxEasingCam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91F1285E19C4531C007C4AEB /* ofxEasingCam.cpp */; };
 		91F7635719BDC9260095D436 /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F7635619BDC9260095D436 /* Syphon.framework */; };
 		91F7636119BDCB0D0095D436 /* ofxSyphonClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91F7635C19BDCB0D0095D436 /* ofxSyphonClient.mm */; };
 		91F7636219BDCB0D0095D436 /* ofxSyphonServer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91F7635E19BDCB0D0095D436 /* ofxSyphonServer.mm */; };
@@ -147,6 +148,11 @@
 		91AD3EEE19C074430056865B /* ofxPostGlitch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPostGlitch.cpp; sourceTree = "<group>"; };
 		91AD3EEF19C074430056865B /* ofxPostGlitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPostGlitch.h; sourceTree = "<group>"; };
 		91AD3EF319C0802A0056865B /* AnimationUnits.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationUnits.hpp; sourceTree = "<group>"; };
+		91F1284519C4428C007C4AEB /* RotationSphere.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RotationSphere.hpp; sourceTree = "<group>"; };
+		91F1284619C44E15007C4AEB /* Orientation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Orientation.hpp; sourceTree = "<group>"; };
+		91F1285E19C4531C007C4AEB /* ofxEasingCam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingCam.cpp; sourceTree = "<group>"; };
+		91F1285F19C4531C007C4AEB /* ofxEasingCam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingCam.h; sourceTree = "<group>"; };
+		91F1286819C46257007C4AEB /* RotationCube.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RotationCube.hpp; sourceTree = "<group>"; };
 		91F7635619BDC9260095D436 /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Syphon.framework; path = ../libs/Syphon/lib/osx/Syphon.framework; sourceTree = "<group>"; };
 		91F7635A19BDCB0D0095D436 /* ofxSyphon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxSyphon.h; path = ../../../addons/ofxSyphon/src/ofxSyphon.h; sourceTree = "<group>"; };
 		91F7635B19BDCB0D0095D436 /* ofxSyphonClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxSyphonClient.h; path = ../../../addons/ofxSyphon/src/ofxSyphonClient.h; sourceTree = "<group>"; };
@@ -282,6 +288,9 @@
 				91F7669F19BDDD2F0095D436 /* PictureSlideShow.hpp */,
 				9101371119BF984B000920F8 /* GeometWave.hpp */,
 				9139ABC619C36D0D003595CB /* KzdPatternExample.hpp */,
+				91F1284519C4428C007C4AEB /* RotationSphere.hpp */,
+				91F1284619C44E15007C4AEB /* Orientation.hpp */,
+				91F1286819C46257007C4AEB /* RotationCube.hpp */,
 			);
 			name = Contents;
 			sourceTree = "<group>";
@@ -425,9 +434,28 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		91F1284719C4531C007C4AEB /* ofxEasingCam */ = {
+			isa = PBXGroup;
+			children = (
+				91F1285D19C4531C007C4AEB /* src */,
+			);
+			name = ofxEasingCam;
+			path = ../../../addons/ofxEasingCam;
+			sourceTree = "<group>";
+		};
+		91F1285D19C4531C007C4AEB /* src */ = {
+			isa = PBXGroup;
+			children = (
+				91F1285E19C4531C007C4AEB /* ofxEasingCam.cpp */,
+				91F1285F19C4531C007C4AEB /* ofxEasingCam.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				91F1284719C4531C007C4AEB /* ofxEasingCam */,
 				9177D49619C232460023A9CE /* ofxOsc */,
 				9156443119BF9F3A00DE70C2 /* ofxGui */,
 				3C99DB1E13FB0B0900B3CA02 /* ofxSyphon */,
@@ -629,6 +657,7 @@
 				9156444419BF9F3A00DE70C2 /* ofxBaseGui.cpp in Sources */,
 				91AD3EF019C074430056865B /* ofxPostGlitch.cpp in Sources */,
 				91F7636219BDCB0D0095D436 /* ofxSyphonServer.mm in Sources */,
+				91F1286319C4531C007C4AEB /* ofxEasingCam.cpp in Sources */,
 				9156444919BF9F3A00DE70C2 /* ofxSlider.cpp in Sources */,
 				9156444519BF9F3A00DE70C2 /* ofxButton.cpp in Sources */,
 			);
@@ -675,6 +704,7 @@
 					../../../addons/ofxOsc/src,
 					../../../addons/ofxOsc/libs/oscpack/src/ip/posix,
 					../../../addons/ofxOsc/libs/oscpack/src/ip/win32,
+					../../../addons/ofxEasingCam/src,
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
@@ -715,6 +745,7 @@
 					../../../addons/ofxOsc/src,
 					../../../addons/ofxOsc/libs/oscpack/src/ip/posix,
 					../../../addons/ofxOsc/libs/oscpack/src/ip/win32,
+					../../../addons/ofxEasingCam/src,
 				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
