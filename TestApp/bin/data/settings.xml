@@ -1,5 +1,5 @@
 <PARAMETERS>
-	<level>0.412598</level>
+	<level>0.117087</level>
 	<gain>1</gain>
 	<smooth_level>0</smooth_level>
 	<show_input_status>1</show_input_status>
@@ -7,6 +7,14 @@
 <PARAMETERS/>
 <group>
 		<color>255, 255, 255, 255</color>
+	<lig_pos>0, 0, 0</lig_pos>
+		<rot_speed>0.5</rot_speed>
+		<size>1</size>
+	<num_box>10</num_box>
+		<rotation_speed>0.1</rotation_speed>
+		<box_size>10</box_size>
+		<spaceing>10</spaceing>
+		<cloud_size>600</cloud_size>
 	</group>
 	<KzdPatternExample>
 		<pos>0, 0, 1200</pos>
@@ -14,7 +22,7 @@
 		<rotate>0, 0, 0</rotate>
 		<bGlobalRotate>1</bGlobalRotate>
 		<thresh>0.362245</thresh>
-		<color>69, 131, 255, 255</color>
+		<color>69, 131, 255, 235</color>
 		<bFIll>0</bFIll>
 		<bReverseTog>0</bReverseTog>
 		<isRand>0</isRand>
@@ -24,7 +32,7 @@
 	<random_color>0</random_color>
 	</GeometWave>
 <RotationSphere>
-		<resolution>5</resolution>
+		<resolution>14</resolution>
 	<color>255, 255, 255, 255</color>
 		<random_color>0</random_color>
 	</RotationSphere>
@@ -33,4 +41,16 @@
 	<light_pos>0.249939, -243.399, 0</light_pos>
 		<light_direction>161.333, 3.89838, -89.8126</light_direction>
 	</Orientation>
+<RotationCube>
+		<lig_pos>331.362, 243.898, 600</lig_pos>
+		<rot_speed>0.0765306</rot_speed>
+		<size>0.428571</size>
+	</RotationCube>
+<BoxPerticle>
+		<num_box>64</num_box>
+		<rotation_speed>0.0530612</rotation_speed>
+		<box_size>131.633</box_size>
+		<spaceing>97.4745</spaceing>
+		<cloud_size>545.918</cloud_size>
+	</BoxPerticle>
 </PARAMETERS>

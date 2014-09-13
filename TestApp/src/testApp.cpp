@@ -4,8 +4,14 @@
 #include "KzdPatternExample.hpp"
 #include "RotationSphere.hpp"
 #include "Orientation.hpp"
+#include "RotationCube.hpp"
+#include "BoxPerticle.hpp"
 
 #define FOR_SWITCHES for (deque<int>::iterator it = mContentsSwitches.begin(); it != mContentsSwitches.end(); it++)
+
+
+SHARED_IMAGES_CONTAINER_TYPE SharedData::mImages;
+SHARED_VIDEOS_CONTAINER_TYPE SharedData::mVideos;
 
 
 void testApp::setup()
@@ -76,6 +82,48 @@ void testApp::setup()
     
 
     //===============================================
+    // setup shared data
+    //===============================================
+//    SHARED_IMAGES_CONTAINER_TYPE * mImgs = SharedData::getImagesPtr();
+//    ofDirectory dir;
+//    if (dir.listDir("pictures") > 0) {
+//        for (int i = 0; i < dir.size(); i++) {
+//            ofImage img;
+//            if (img.loadImage(dir.getPath(i))) {
+//                mImgs->push_back(img);
+//                ofLogNotice() << "load image: " << dir.getPath(i);
+//            } else {
+//                ofLogError() << "faild load picture: " << dir.getPath(i);
+//                OF_EXIT_APP(1);
+//            }
+//        }
+//    } else {
+//        ofLogError() << "faild load pictures dir";
+//        OF_EXIT_APP(1);
+//    }
+//    dir.close();
+    
+    ofDirectory dir;
+    if (dir.listDir("pictures") > 0) {
+        for (int i = 0; i < dir.size(); i++) {
+            mImages.push_back(ofImage());
+            if (mImages.back().loadImage(dir.getPath(i))) {
+                ofLogNotice() << "load image: " << dir.getPath(i);
+            } else {
+                ofLogError() << "faild load picture: " << dir.getPath(i);
+                OF_EXIT_APP(1);
+            }
+        }
+    } else {
+        ofLogError() << "faild load pictures dir";
+        OF_EXIT_APP(1);
+    }
+    dir.close();
+    
+    shuffleTexture();
+    
+    
+    //===============================================
     // create contents list
     //===============================================
     mContents.push_back(shared_ptr<BaseContentsInterface>(new PictureSlideShow("")));
@@ -83,10 +131,12 @@ void testApp::setup()
     mContents.push_back(shared_ptr<BaseContentsInterface>(new KzdPatternExample()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationSphere()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new Orientation()));
-
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationCube(&mTex)));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new BoxPerticle(&mTex2, 200)));
     
     for (content_it it = mContents.begin(); it != mContents.end(); it++) {
         (*it)->updateSoundStatus(&MAIN_WAVE, MAIN_LEVEL);
+        (*it)->setupGui();
         (*it)->setup();
     }
     
@@ -179,6 +229,7 @@ void testApp::update()
 
 void testApp::draw()
 {
+
     //===============================================
     // content draw
     //===============================================
@@ -348,7 +399,22 @@ bool testApp::checkUnique(const int num)
 
 void testApp::sendBang()
 {
+    shuffleTexture();
     FOR_SWITCHES mContents[*it]->getBang();
+}
+
+void testApp::shuffleTexture()
+{
+    mTex.clear();
+    mTex2.clear();
+    
+    int rd = ofRandom(mImages.size());
+    mTex.allocate(mImages[rd].getWidth(), mImages[rd].getHeight(), GL_RGB);
+    mTex.loadData(mImages[rd].getPixelsRef());
+    
+    rd = ofRandom(mImages.size());
+    mTex2.allocate(mImages[rd].getWidth(), mImages[rd].getHeight(), GL_RGB);
+    mTex2.loadData(mImages[rd].getPixelsRef());
 }
 
 void testApp::generateWave(WAVE_TYPE &wave)
@@ -379,6 +445,10 @@ void testApp::keyPressed(int key)
         case '3': toggleContentsSwitch(3); break;
         case '4': toggleContentsSwitch(4); break;
         case '5': toggleContentsSwitch(5); break;
+        case '6': toggleContentsSwitch(6); break;
+        case '7': toggleContentsSwitch(7); break;
+        case '8': toggleContentsSwitch(8); break;
+        case '9': toggleContentsSwitch(9); break;
         
         default: FOR_SWITCHES mContents[*it]->keyPressed(key); break;
     }
@@ -407,8 +477,6 @@ void testApp::audioIn(float * input, int bufferSize, int nChannels)
 		curVol += left[i] * left[i];
 		curVol += right[i] * right[i];
 		numCounted+=2;
-        
-        
 	}
 	
 	//this is how we get the mean of rms :)

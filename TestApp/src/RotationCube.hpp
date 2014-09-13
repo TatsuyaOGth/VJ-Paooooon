@@ -2,7 +2,7 @@
 
 #include "BaseContentsInterface.h"
 
-class RotationCube : public BaseVfxInterface
+class RotationCube : public BaseContentsInterface
 {
     ofLight light; // creates a light and enables lighting
     
@@ -18,29 +18,22 @@ class RotationCube : public BaseVfxInterface
     
     ofBoxPrimitive mBox;
     
-    ofImage mImg;
+//    ofImage mImg;
+    ofTexture * mTex;
     
     ofParameter<ofVec3f> mLigPos;
     ofParameter<float> mRotSpeed;
     ofParameter<float> mSize;
     
-    
     float mVecRot;
     
 public:
-    RotationCube(const string & image_path = ""):
+    RotationCube(ofTexture * tex = NULL):
+    mTex(tex),
     mRotationSpeed(0.1),
     mBoxSize(100)
     {
-        if (!image_path.empty()) {
-            if (mImg.loadImage(image_path)) {
-                ofLogNotice(getName()) << "load image: " << image_path;
-            } else {
-                ofLogError(getName()) << "faild load texture image: " << image_path;
-            }
-        }
-        
-        base::mParamGroup.add(mLigPos.set("lig_pos", ofVec3f(0,0,0), ofVec3f(-100,-100,-100), ofVec3f(100,100,100)));
+        base::mParamGroup.add(mLigPos.set("lig_pos", ofVec3f(0,0,0), ofVec3f(-600,-600,-600), ofVec3f(600,600,600)));
         base::mParamGroup.add(mRotSpeed.set("rot_speed", 0.5, 0, 1));
         base::mParamGroup.add(mSize.set("size", 1, 0, 2));
     }
@@ -63,7 +56,7 @@ public:
     void update()
     {
         float movementSpeed = mRotSpeed;
-        float cloudSize = getWidth() / 2;
+        float cloudSize = WIDTH / 2;
         float maxBoxSize = 100;
         float spacing = 0.5;
         
@@ -93,7 +86,7 @@ public:
         //	mCam.begin();
         
         ofPushMatrix();
-        ofTranslate(getWidth() / 2, getHeight() / 2);
+        ofTranslate(WIDTH / 2, HEIGHT / 2);
         
         ofRotateX(mPos.x);
         ofRotateY(mPos.y);
@@ -109,33 +102,13 @@ public:
         mBox.setScale((base::getLevel() * -1 + 1) + 1);
 
         // frame
-        if (getLevel() > 0.0f) {
-            
-            ofSetColor(ofRandom(2) * 255, base::getOpacity() * 255);
-            if (mImg.isAllocated()) {
-                mImg.bind();
-                mBox.draw();
-                mImg.unbind();
-            } else {
-                mBox.draw();
-            }
-            
-            for (int i = 0; i < (int)(base::getLevel() * 20); i++) {
-                mBox.setScale(1 + (float)i * 0.5);
-                float rot = i * mVecRot * 60;
-                ofRotateX(rot);
-                ofRotateY(rot);
-                ofRotateZ(rot);
-                mBox.drawWireframe();
-            }
+        ofSetBoxResolution(8);
+        if (mTex != NULL && mTex->isAllocated()) {
+            mTex->bind();
+            mBox.draw();
+            mTex->unbind();
         } else {
-            if (mImg.isAllocated()) {
-                mImg.bind();
-                mBox.draw();
-                mImg.unbind();
-            } else {
-                mBox.draw();
-            }
+            mBox.draw();
         }
         
         ofPopMatrix();
@@ -149,19 +122,8 @@ public:
         
     }
     
-    void action(int trig)
+    void getBang()
     {
-        switch (trig) {
-            case 1:
-                break;
-                
-            case 2:
-                break;
-                
-            default:
-                break;
-        }
-        mVecRot = ofRandomf();
     }
 
     

@@ -44,6 +44,7 @@ private:
     void toggleContentsSwitch(const int toggle);
     bool checkUnique(const int num);
     void sendBang();
+    void shuffleTexture();
     void generateWave(WAVE_TYPE & wave);
     
     // syphone
@@ -79,6 +80,11 @@ private:
     
     // post glitch
     ofxPostGlitch * mPostGlitch;
+    
+    // textures
+    vector<ofImage> mImages;
+    ofTexture mTex;
+    ofTexture mTex2;
 };
 
 #endif

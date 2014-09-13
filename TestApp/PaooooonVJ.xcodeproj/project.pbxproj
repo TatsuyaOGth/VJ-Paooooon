@@ -153,6 +153,7 @@
 		91F1285E19C4531C007C4AEB /* ofxEasingCam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasingCam.cpp; sourceTree = "<group>"; };
 		91F1285F19C4531C007C4AEB /* ofxEasingCam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasingCam.h; sourceTree = "<group>"; };
 		91F1286819C46257007C4AEB /* RotationCube.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RotationCube.hpp; sourceTree = "<group>"; };
+		91F1286919C46511007C4AEB /* BoxPerticle.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BoxPerticle.hpp; sourceTree = "<group>"; };
 		91F7635619BDC9260095D436 /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Syphon.framework; path = ../libs/Syphon/lib/osx/Syphon.framework; sourceTree = "<group>"; };
 		91F7635A19BDCB0D0095D436 /* ofxSyphon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxSyphon.h; path = ../../../addons/ofxSyphon/src/ofxSyphon.h; sourceTree = "<group>"; };
 		91F7635B19BDCB0D0095D436 /* ofxSyphonClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxSyphonClient.h; path = ../../../addons/ofxSyphon/src/ofxSyphonClient.h; sourceTree = "<group>"; };
@@ -291,6 +292,7 @@
 				91F1284519C4428C007C4AEB /* RotationSphere.hpp */,
 				91F1284619C44E15007C4AEB /* Orientation.hpp */,
 				91F1286819C46257007C4AEB /* RotationCube.hpp */,
+				91F1286919C46511007C4AEB /* BoxPerticle.hpp */,
 			);
 			name = Contents;
 			sourceTree = "<group>";

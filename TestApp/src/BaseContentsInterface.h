@@ -65,12 +65,22 @@ public:
         return mName;
     }
     
+    void setupGui()
+    {
+        mParamGroup.setName(getName());
+    }
+    
     ofParameterGroup getParamGroup() { return mParamGroup; }
 
 protected:
     WAVE_TYPE *     getWavePtr() const { return  mWave; }
     WAVE_TYPE       getWave() const { return  *mWave; }
     LEVEL_TYPE      getLevel() const { return mLevel; }
+    
+    float getWidth() { return WIDTH; }
+    float getHeight() { return HEIGHT; }
+    float getOpacity() { return 1.0; }
+    
     
     typedef BaseContentsInterface base;
     typedef list<shared_ptr<BaseAnimationUnit> >::iterator anm_it;
