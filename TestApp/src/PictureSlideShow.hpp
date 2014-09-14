@@ -4,22 +4,18 @@
 
 class PictureSlideShow : public BaseContentsInterface
 {
-    string mDirPath;
-    ofDirectory mDir;
+    ofTexture & mTex;
+    
+    ofParameter<bool> gray;
     
 public:
-    PictureSlideShow(const string& dirPath):
-    mDirPath(dirPath)
+    PictureSlideShow(ofTexture & tex):
+    mTex(tex)
     {
     }
     
     void setup()
     {
-        if (!mDirPath.empty()) {
-            if (mDir.listDir(mDirPath) == 0) {
-                ofLogError() << "not picture" ;
-            }
-        }
         
     }
     
@@ -29,6 +25,15 @@ public:
     }
     
     void draw()
+    {
+        if (mTex.isAllocated()) {
+            ofEnableAlphaBlending();
+            mTex.draw(0, 0, WIDTH, HEIGHT);
+            ofDisableAlphaBlending();
+        }
+    }
+    
+    void getBang()
     {
         
     }
