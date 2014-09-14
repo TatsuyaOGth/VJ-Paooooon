@@ -37,7 +37,7 @@ class Media
     typedef struct
     {
         int current;
-        float counter;
+        float lcounter;
         float duration;
         bool bHorizon;
         bool additional;
@@ -48,31 +48,30 @@ class Media
         float diffImgW2;
         float diffImgH2;
         float x, y, w, h;
+        float a;
         
         void update() {
-            float a;
-            if (counter > duration * 0.7) {
-                a = ((duration - counter) / (duration * 0.3)) * 255;
-            } else if (counter < duration * 0.3) {
-                a = ofMap(counter, 0, duration * 0.3, 0, 255, true);
+            if (lcounter > duration * 0.7) {
+                a = ((duration - lcounter) / (duration * 0.3)) * 255;
+            } else if (lcounter < duration * 0.3) {
+                a = ofMap(lcounter, 0, duration * 0.3, 0, 255, true);
             } else {
                 a = 255;
             }
+//            cout << "           " << lcounter << endl;
             
             if (bHorizon) {
-                ofSetColor(255, 255, 255, a);
-                x = ofMap(counter, 0, duration, -diffImgW, 0);
+                x = ofMap(lcounter, 0, duration, -diffImgW, 0);
                 y = 0;
                 w = imgW + (additional ? diffImgW2 : diffImgW);
                 h = HEIGHT;
             } else {
-                ofSetColor(255, 255, 255, a);
                 x = 0;
-                y = ofMap(counter, 0, duration, -diffImgH, 0);
+                y = ofMap(lcounter, 0, duration, -diffImgH, 0);
                 w = WIDTH;
                 h = imgH + (additional ? diffImgH2 : diffImgH);
             }
-            counter -= ofGetLastFrameTime();
+            lcounter -= ofGetLastFrameTime();
         }
     } picture;
     deque<picture> mPictures;
@@ -87,7 +86,7 @@ public:
     Media()
     {
         mFbo.allocate(WIDTH, HEIGHT, GL_RGBA);
-        duration = 5;
+        duration = 8;
         counter = 3;
         bDidStartChange = false;
         bHorizon = false;
@@ -197,7 +196,7 @@ public:
 //                picture p = {&mImages[current], current, duration, duration, bHorizon, imgW, imgH, diffImgW, diffImgH, diffImgW2, diffImgH2};
                 mPictures.push_back(picture());
                 mPictures.back().current = current;
-                mPictures.back().counter = duration;
+                mPictures.back().lcounter = duration;
                 mPictures.back().duration = duration;
                 mPictures.back().bHorizon = bHorizon;
                 mPictures.back().additional = additional;
@@ -211,13 +210,15 @@ public:
             } else {
                 counter -= ofGetLastFrameTime();
             }
+//            cout << counter << endl;
             
             ofEnableAlphaBlending();
             deque<picture>::iterator it = mPictures.begin();
             while (it != mPictures.end()) {
                 it->update();
+                ofSetColor(255, 255, 255, it->a);
                 mImages[it->current].draw(it->x, it->y, it->w, it->h);
-                if (it->counter < 0) {
+                if (it->lcounter < 0) {
                     it = mPictures.erase(it);
                 } else ++it;
             }
