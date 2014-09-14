@@ -25,10 +25,15 @@ void testApp::setup()
 	   
 	ofSetFrameRate(60); // if vertical sync is off, we can go a bit fast... this caps the framerate at 60fps.
     
-    mMainFbo.allocate(common::width, common::height);
+    ofFbo::Settings s;
+    s.width = WIDTH;
+    s.height = HEIGHT;
+    s.internalformat = GL_RGBA;
+    s.useDepth = true;
+    s.useStencil = true;
     
+    mMainFbo.allocate(s);
     
-
     
     //===============================================
     // sound input
@@ -71,58 +76,45 @@ void testApp::setup()
     //===============================================
     // setup ofxPostGlitch
     //===============================================
-    mPostGlitch = new ofxPostGlitch();
-    mPostGlitch->setup(&mMainFbo);
-    
+    mPostGlitch.shader[0].load("Shaders/convergence");
+    mPostGlitch.shader[1].load("Shaders/glow");
+    mPostGlitch.shader[2].load("Shaders/shaker");
+    mPostGlitch.shader[3].load("Shaders/cut_slider");
+    mPostGlitch.shader[4].load("Shaders/twist");
+    mPostGlitch.shader[5].load("Shaders/outline");
+    mPostGlitch.shader[6].load("Shaders/noise");
+    mPostGlitch.shader[7].load("Shaders/slitscan");
+    mPostGlitch.shader[8].load("Shaders/swell");
+    mPostGlitch.shader[9].load("Shaders/invert");
+    mPostGlitch.shader[10].load("Shaders/crHighContrast");
+    mPostGlitch.shader[11].load("Shaders/crBlueraise");
+    mPostGlitch.shader[12].load("Shaders/crRedraise");
+    mPostGlitch.shader[13].load("Shaders/crGreenraise");
+    mPostGlitch.shader[14].load("Shaders/crRedinvert");
+    mPostGlitch.shader[15].load("Shaders/crBlueinvert");
+    mPostGlitch.shader[16].load("Shaders/crGreeninvert");
+    mPostGlitch.setup(&mMainFbo);
+    mGlitchCount = 0;
+    mGlitchTime = 10;
     
 
     //===============================================
     // load texture resouces
     //===============================================
-    ofDirectory dir;
-    if (dir.listDir("pictures") > 0) {
-        for (int i = 0; i < dir.size(); i++) {
-            mImages.push_back(ofImage());
-            if (mImages.back().loadImage(dir.getPath(i))) {
-                ofLogNotice() << "load image: " << dir.getPath(i);
-            } else {
-                ofLogError() << "faild load picture: " << dir.getPath(i);
-                OF_EXIT_APP(1);
-            }
-        }
-    } else {
-        ofLogError() << "faild load pictures dir";
-        OF_EXIT_APP(1);
-    }
-    dir.close();
-    
-    if (dir.listDir("videos") > 0) {
-        for (int i = 0; i < dir.size(); i++) {
-            mVideos.push_back(VIDEO_TYPE());
-            if (mVideos.back().loadMovie(dir.getPath(i))) {
-                mVideos.back().setVolume(0);
-                ofLogNotice() << "load video: " << dir.getPath(i);
-            } else {
-                ofLogError() << "faild load video: " << dir.getPath(i);
-                OF_EXIT_APP(1);
-            }
-        }
-    } else {
-        ofLogError() << "faild load videos dir";
-        OF_EXIT_APP(1);
-    }
-    shuffleTexture();
+    if (!media.loadImages("pictures")) OF_EXIT_APP(1);
+    if (!media.loadVideos("videos")) OF_EXIT_APP(1);
+//    shuffleTexture();
     
     //===============================================
     // create contents list
     //===============================================
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new PictureSlideShow("")));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new PictureSlideShow(media.mFbo.getTextureReference())));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new GeometWave()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new KzdPatternExample()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationSphere()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new Orientation()));
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationCube(&mTex)));
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new BoxPerticle(&mTex, 200)));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationCube(media.mFbo.getTextureReference())));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new BoxPerticle(media.mFbo.getTextureReference(), 200)));
     
     for (content_it it = mContents.begin(); it != mContents.end(); it++) {
         (*it)->updateSoundStatus(&MAIN_WAVE, MAIN_LEVEL);
@@ -141,7 +133,8 @@ void testApp::setup()
     mParamGroup.add(mSmoothLevel.set("smooth_level", 0.8, 0.0, 1.0));
     mParamGroup.add(bDrawInputSoundStates.set("show_input_status", false));
     mParamGroup.add(bVideo.set("video_mode", false));
-    mParamGroup.add(mSelVideo.set("select_video", 0, 0, mVideos.size() - 1));
+    mParamGroup.add(mSelVideo.set("select_video", 0, 0, media.mVideos.size() - 1));
+    mParamGroup.add(bNoise.set("noise", false));
     
     mGuiPanel.setup(mParamGroup);
     for (content_it it = mContents.begin(); it != mContents.end(); it++) {
@@ -162,21 +155,10 @@ void testApp::update()
     //===============================================
     share::elapsedTime = ofGetElapsedTimef();
     
-    if (bVideo) {
-        if (mVideos[mSelVideo].isPaused()) mVideos[mSelVideo].play();
-        mVideos[mSelVideo].update();
-        
-        ofPixelsRef px = mVideos[mSelVideo].getPixelsRef();
-        if (!mTex.isAllocated() || mTex.getWidth() != px.getWidth() || mTex.getHeight() != px.getHeight()) {
-            mTex.clear();
-            mTex.allocate(px);
-            mTex.loadData(mVideos[mSelVideo].getPixelsRef());
-        } else {
-            mTex.loadData(mVideos[mSelVideo].getPixelsRef());
-        }
-    } else {
-        if (mVideos[mSelVideo].isPlaying()) mVideos[mSelVideo].stop();
-    }
+    media.bVideo = bVideo;
+    media.mSelVideo = mSelVideo;
+    media.update();
+    
     
     //===============================================
     // sound input update
@@ -233,6 +215,13 @@ void testApp::update()
         mContents[*it]->updateSoundStatus(&MAIN_WAVE, tmpLv);
         mContents[*it]->update();
     }
+    
+    
+    if (mGlitchCount > 0) {
+        mGlitchCount--;
+    } else {
+        stopNoise();
+    }
 }
 
 void testApp::draw()
@@ -243,12 +232,13 @@ void testApp::draw()
     //===============================================
     mMainFbo.begin();
     ofBackground(0);
+    ofSetColor(255, 255, 255, 255);
     ofEnableAlphaBlending();
     FOR_SWITCHES { mContents[*it]->draw(); }
     ofDisableAlphaBlending();
     mMainFbo.end();
     
-    mPostGlitch->generateFx();
+    mPostGlitch.generateFx();
     mMainFbo.draw(0, 0);
     
     //===============================================
@@ -408,18 +398,8 @@ bool testApp::checkUnique(const int num)
 
 void testApp::sendBang()
 {
-    shuffleTexture();
     FOR_SWITCHES mContents[*it]->getBang();
-}
-
-void testApp::shuffleTexture()
-{
-    if (!bVideo) {
-        int rd = ofRandom(mImages.size());
-        mTex.clear();
-        mTex.allocate(mImages[rd].getPixelsRef());
-        mTex.loadData(mImages[rd].getPixelsRef());
-    }
+    if (bNoise) generateNoise();
 }
 
 void testApp::generateWave(WAVE_TYPE &wave)
@@ -431,6 +411,34 @@ void testApp::generateWave(WAVE_TYPE &wave)
 //        MAIN_WAVE[i] = ofNoise(i, ofGetElapsedTimef()) * MAIN_LEVEL;
 
 //        MAIN_WAVE[i] = ofSignedNoise(i + ofGetElapsedTimef()) * MAIN_LEVEL;
+    }
+}
+
+void testApp::generateNoise()
+{
+    stopNoise();
+    
+    int rnd = ofRandom(8);
+    switch (rnd) {
+        case 0: mPostGlitch.setFx(OFXPOSTGLITCH_CONVERGENCE, true); break;
+        case 1: mPostGlitch.setFx(OFXPOSTGLITCH_SHAKER, true); break;
+        case 2: mPostGlitch.setFx(OFXPOSTGLITCH_CUTSLIDER, true); break;
+        case 3: mPostGlitch.setFx(OFXPOSTGLITCH_TWIST, true); break;
+        case 4: mPostGlitch.setFx(OFXPOSTGLITCH_OUTLINE, true); break;
+        case 5: mPostGlitch.setFx(OFXPOSTGLITCH_NOISE, true); break;
+        case 6: mPostGlitch.setFx(OFXPOSTGLITCH_SLITSCAN, true); break;
+        case 7: mPostGlitch.setFx(OFXPOSTGLITCH_SWELL, true); break;
+    }
+    mGlitchTime = ofRandom(5, 20);
+    mGlitchCount = mGlitchTime;
+}
+
+void testApp::stopNoise()
+{
+    for (int i = 0; i < GLITCH_NUM; i++) {
+        if (mPostGlitch.bShading[i]) {
+            mPostGlitch.bShading[i] = false;
+        }
     }
 }
 
@@ -456,6 +464,7 @@ void testApp::keyPressed(int key)
         case '9': toggleContentsSwitch(9); break;
             
         case 'v': bVideo ^= true; break;
+        case '=': generateNoise(); break;
         
         default: FOR_SWITCHES mContents[*it]->keyPressed(key); break;
     }

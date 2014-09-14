@@ -12,6 +12,9 @@ namespace common
     // sound devise
     static const int soundDeviceID = 3;
     static const int bufferSize = 256;
+    
+    // glitch time
+    static const int glitchTime = 10;// frame
 }
 
 namespace share
@@ -29,3 +32,7 @@ namespace share
 typedef vector<float>   WAVE_TYPE;
 typedef float           LEVEL_TYPE;
 
+
+
+#define debugMouseX(a) (((float)ofGetMouseX()/(float)ofGetWidth())*a)
+#define debugMouseY(a) (((float)ofGetMouseY()/(float)ofGetHeight())*a)

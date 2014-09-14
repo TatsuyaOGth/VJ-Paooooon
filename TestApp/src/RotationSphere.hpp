@@ -82,10 +82,11 @@ public:
     
     void draw()
     {
-        ofNoFill();
+        
         
         ofPushMatrix();
         ofPushStyle();
+        ofNoFill();
         ofSetSphereResolution(mResolution);
         ofSetRectMode(OF_RECTMODE_CENTER);
         
@@ -94,7 +95,6 @@ public:
         ofSetColor(mColor, 20 + (LEVEL * 235));
         ofSetLineWidth(1);
         
-        ofPushMatrix();
         
         ofRotate(ofGetFrameNum(), 0, 1, 0);
         float size = HEIGHT;
@@ -141,7 +141,7 @@ public:
             mColor = col;
         }
         
-        mode = (int)ofRandom(3);
+        mode = (int)ofRandom(4);
     }
     
     void drawPoint(int x, int y, int z, float size, int i)

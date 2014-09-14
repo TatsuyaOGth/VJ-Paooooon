@@ -53,24 +53,25 @@ public:
     void draw()
     {
         
-        ofNoFill();
+        
         ofPushStyle();
+        ofNoFill();
         ofEnableLighting();
         ofEnableDepthTest();
         cam.begin();
         lig.enable();
         
-        ofSetColor(255);
+        ofSetColor(255, 255, 255, LEVEL * 200 + 55);
         drawGrid(1500, 20, true, false, true, false);
         lig.draw();
         lig.disable();
         cam.end();
         ofDisableLighting();
         ofDisableDepthTest();
-        ofPopStyle();
+        
         
         drawRaderWindowMarks(6, (abs(sin(share::elapsedTime))) * 20 + 5);
-        
+        ofPopStyle();
     }
     
     void getBang()

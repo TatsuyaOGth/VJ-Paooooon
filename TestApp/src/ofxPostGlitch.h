@@ -37,7 +37,13 @@ public:
 
 	ofxPostGlitch(){
 		targetBuffer = NULL;
-		shader[0].load("Shaders/convergence");
+//        loadAllShaders();
+        for (int i = 0;i < GLITCH_NUM;i++) bShading[i] = false;
+	}
+    
+    void loadAllShaders()
+    {
+        shader[0].load("Shaders/convergence");
 		shader[1].load("Shaders/glow");
 		shader[2].load("Shaders/shaker");
 		shader[3].load("Shaders/cut_slider");
@@ -54,8 +60,7 @@ public:
 		shader[14].load("Shaders/crRedinvert");
 		shader[15].load("Shaders/crBlueinvert");
 		shader[16].load("Shaders/crGreeninvert");
-        for (int i = 0;i < GLITCH_NUM;i++) bShading[i] = false;
-	}
+    }
 
 	/* Initialize & set target Fbo */
 	void setup(ofFbo* buffer_);
@@ -75,7 +80,7 @@ public:
 	/* Apply enable effects to target Fbo */
 	void generateFx();
 
-protected:
+//protected:
 	bool		bShading[GLITCH_NUM];
 	ofShader	shader[GLITCH_NUM];
 	ofFbo*		targetBuffer;

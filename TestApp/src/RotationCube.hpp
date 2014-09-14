@@ -19,7 +19,7 @@ class RotationCube : public BaseContentsInterface
     ofBoxPrimitive mBox;
     
 //    ofImage mImg;
-    ofTexture * mTex;
+    ofTexture & mTex;
     
     ofParameter<ofVec3f> mLigPos;
     ofParameter<float> mRotSpeed;
@@ -28,7 +28,7 @@ class RotationCube : public BaseContentsInterface
     float mVecRot;
     
 public:
-    RotationCube(ofTexture * tex = NULL):
+    RotationCube(ofTexture & tex):
     mTex(tex),
     mRotationSpeed(0.1),
     mBoxSize(100)
@@ -103,10 +103,10 @@ public:
 
         // frame
         ofSetBoxResolution(8);
-        if (mTex != NULL && mTex->isAllocated()) {
-            mTex->bind();
+        if (mTex.isAllocated()) {
+            mTex.bind();
             mBox.draw();
-            mTex->unbind();
+            mTex.unbind();
         } else {
             mBox.draw();
         }
