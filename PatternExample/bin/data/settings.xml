@@ -1,0 +1,13 @@
+<panel>
+	<pos>0, 1200, 0</pos>
+	<scale>200, 276.973, 0</scale>
+	<rotate>100, 0, 0</rotate>
+	<GlobalRotate>0</GlobalRotate>
+	<thresh>0.25</thresh>
+	<color>255, 255, 255, 41</color>
+	<fIll>0</fIll>
+	<reverseTog>0</reverseTog>
+	<gain>1.45</gain>
+	<randam>1</randam>
+<panel/>
+</panel>

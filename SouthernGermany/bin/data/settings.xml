@@ -1,5 +1,5 @@
 <PARAMETERS>
-	<level>0.77</level>
+	<level>0.435</level>
 	<gain>1.0</gain>
 	<smooth_level>0</smooth_level>
 	<show_input_status>0</show_input_status>
@@ -22,7 +22,7 @@
 		<rotate>0, 0, 47.0054</rotate>
 		<bGlobalRotate>0</bGlobalRotate>
 		<thresh>0.362245</thresh>
-		<color>102, 142, 255, 196</color>
+		<color>38, 104, 255, 110</color>
 		<bFIll>0</bFIll>
 		<bReverseTog>0</bReverseTog>
 		<isRand>0</isRand>

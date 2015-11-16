@@ -1,4 +1,4 @@
-#N canvas 1116 529 228 278 10;
+#N canvas 410 102 233 315 10;
 #X declare -path p;
 #X obj 12 63 continer;
 #X obj 8 6 cnv 15 100 30 empty empty SoundInputStream 12 12 0 14 -233017

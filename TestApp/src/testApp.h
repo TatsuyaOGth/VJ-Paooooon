@@ -12,7 +12,7 @@
 
 // input mode
 //#define USE_OF_AUDIO_IN
-#define USE_OSC_RECEIVER
+//#define USE_OSC_RECEIVER
 
 #define MAIN_LEVEL  mLevel
 #define MAIN_WAVE   left
@@ -61,13 +61,13 @@ class Media
 //            cout << "           " << lcounter << endl;
             
             if (bHorizon) {
-                x = ofMap(lcounter, 0, duration, -diffImgW, 0);
+                x = ofMap(lcounter, 0, duration, -diffImgW, 0, true);
                 y = 0;
                 w = imgW + (additional ? diffImgW2 : diffImgW);
                 h = HEIGHT;
             } else {
                 x = 0;
-                y = ofMap(lcounter, 0, duration, -diffImgH, 0);
+                y = ofMap(lcounter, 0, duration, -diffImgH, 0, true);
                 w = WIDTH;
                 h = imgH + (additional ? diffImgH2 : diffImgH);
             }

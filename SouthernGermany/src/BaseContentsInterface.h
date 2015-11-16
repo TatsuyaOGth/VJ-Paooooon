@@ -88,7 +88,7 @@ protected:
     ofParameterGroup mParamGroup;
     
     template<class T>
-    void setParameter(ofParameter<T> & param) {
+    void setParameter(ofParameter<T> param) {
         mParamGroup.add(param);
     }
     

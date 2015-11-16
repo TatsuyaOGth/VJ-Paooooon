@@ -1,6 +1,6 @@
 <PARAMETERS>
-	<level>0.77</level>
-	<gain>1.0</gain>
+	<level>0.64</level>
+	<gain>1</gain>
 	<smooth_level>0</smooth_level>
 	<show_input_status>0</show_input_status>
 	<clipping>1</clipping>
@@ -17,43 +17,43 @@
 		<cloud_size>600</cloud_size>
 	</group>
 	<KzdPatternExample>
-		<pos>0, 0, 250.396</pos>
-		<scale>0, 0, 276.343</scale>
-		<rotate>0, 0, 47.0054</rotate>
-		<bGlobalRotate>0</bGlobalRotate>
+		<pos>0, 0, 0</pos>
+		<scale>93.7914, 509.038, 407.702</scale>
+		<rotate>0, 0, 0</rotate>
+		<bGlobalRotate>1</bGlobalRotate>
 		<thresh>0.362245</thresh>
-		<color>102, 142, 255, 196</color>
+		<color>102, 142, 255, 163</color>
 		<bFIll>0</bFIll>
 		<bReverseTog>0</bReverseTog>
-		<isRand>0</isRand>
+		<isRand>1</isRand>
 	</KzdPatternExample>
 <GeometWave>
 		<color>255, 255, 255, 255</color>
-	<random_color>1</random_color>
+	<random_color>0</random_color>
 	</GeometWave>
 <RotationSphere>
-		<resolution>16</resolution>
+		<resolution>12</resolution>
 	<color>123, 255, 93, 255</color>
 		<random_color>0</random_color>
 	</RotationSphere>
 <Orientation>
-		<speed>0.020699</speed>
-	<light_pos>237.651, 600, -237.151</light_pos>
+		<speed>0.0484796</speed>
+	<light_pos>237.651, 600, -349.604</light_pos>
 		<light_direction>266.289, 3.89838, -89.8126</light_direction>
 	</Orientation>
 <RotationCube>
 		<lig_pos>331.362, 243.898, 600</lig_pos>
-		<rot_speed>0.19898</rot_speed>
-		<size>0.44898</size>
+		<rot_speed>0.734694</rot_speed>
+		<size>0.357143</size>
 	</RotationCube>
 <BoxPerticle>
-		<num_box>32</num_box>
-		<rotation_speed>0.330612</rotation_speed>
-		<box_size>140.816</box_size>
-		<spaceing>10.0918</spaceing>
-		<cloud_size>613.776</cloud_size>
+		<num_box>27</num_box>
+		<rotation_speed>0.4</rotation_speed>
+		<box_size>198.98</box_size>
+		<spaceing>100</spaceing>
+		<cloud_size>419.898</cloud_size>
 	<color>255, 255, 255, 255</color>
-		<random_color>1</random_color>
+		<random_color>0</random_color>
 	</BoxPerticle>
 <video_mode>0</video_mode>
 <select_video>1</select_video>

@@ -1,10 +1,8 @@
 #include "testApp.h"
-#include "PictureSlideShow.hpp"
 #include "GeometWave.hpp"
 #include "KzdPatternExample.hpp"
 #include "RotationSphere.hpp"
 #include "Orientation.hpp"
-#include "RotationCube.hpp"
 #include "BoxPerticle.hpp"
 
 #define FOR_SWITCHES for (deque<int>::iterator it = mContentsSwitches.begin(); it != mContentsSwitches.end(); it++)
@@ -13,6 +11,9 @@ void testApp::setup()
 {
     ofSetWindowShape(common::width, common::height);
 	ofSetCircleResolution(60);
+    ofSetVerticalSync(true);
+    ofSetFrameRate(60); // if vertical sync is off, we can go a bit fast... this caps the framerate at 60fps.
+
     
     //===============================================
     // setup syphon
@@ -21,9 +22,8 @@ void testApp::setup()
 	mClient.setup();
     
     //using Syphon app Simple Server, found at http://syphon.v002.info/
-    mClient.set("","Simple Server");
+    mClient.set("searver","Simple Server");
 	   
-	ofSetFrameRate(60); // if vertical sync is off, we can go a bit fast... this caps the framerate at 60fps.
     
     ofFbo::Settings s;
     s.width = WIDTH;
@@ -33,7 +33,8 @@ void testApp::setup()
     s.useStencil = true;
     
     mMainFbo.allocate(s);
-    
+    mSyphonFbo.allocate(s);
+//    mTex.allocate(s);
     
     //===============================================
     // sound input
@@ -101,20 +102,18 @@ void testApp::setup()
     //===============================================
     // load texture resouces
     //===============================================
-    if (!media.loadImages("pictures")) OF_EXIT_APP(1);
-    if (!media.loadVideos("videos")) OF_EXIT_APP(1);
+//    if (!media.loadImages("pictures")) OF_EXIT_APP(1);
+//    if (!media.loadVideos("videos")) OF_EXIT_APP(1);
 //    shuffleTexture();
     
     //===============================================
     // create contents list
     //===============================================
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new PictureSlideShow(media.mFbo.getTextureReference())));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new GeometWave()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new KzdPatternExample()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationSphere()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new Orientation()));
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationCube(media.mFbo.getTextureReference())));
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new BoxPerticle(media.mFbo.getTextureReference(), 200)));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new BoxPerticle()));
     
     for (content_it it = mContents.begin(); it != mContents.end(); it++) {
         (*it)->updateSoundStatus(&MAIN_WAVE, MAIN_LEVEL);
@@ -134,8 +133,6 @@ void testApp::setup()
     mParamGroup.add(mSmoothLevel.set("smooth_level", 0.8, 0.0, 1.0));
 #endif
     mParamGroup.add(bDrawInputSoundStates.set("show_input_status", false));
-    mParamGroup.add(bVideo.set("video_mode", false));
-    mParamGroup.add(mSelVideo.set("select_video", 0, 0, media.mVideos.size() - 1));
     mParamGroup.add(bNoise.set("noise", false));
     
     mGuiPanel.setup(mParamGroup);
@@ -156,10 +153,6 @@ void testApp::update()
     // update share values
     //===============================================
     share::elapsedTime = ofGetElapsedTimef();
-    
-    media.bVideo = bVideo;
-    media.mSelVideo = mSelVideo;
-    media.update();
     
     
     //===============================================
@@ -234,7 +227,7 @@ void testApp::draw()
     //===============================================
     mMainFbo.begin();
 //    ofClear(0, 0, 0, 0);
-    ofBackground(0, 0, 0, 0);
+//    ofBackground(0, 0, 0, 0);
     ofSetColor(255, 255, 255, 255);
     ofEnableAlphaBlending();
     FOR_SWITCHES { mContents[*it]->draw(); }
@@ -242,7 +235,14 @@ void testApp::draw()
     mMainFbo.end();
     
     mPostGlitch.generateFx();
+    
+    mSyphonFbo.begin();
+    ofBackground(0, 0, 0, 0);
+    ofSetColor(255, 255, 255);
     mMainFbo.draw(0, 0);
+    mSyphonFbo.end();
+    
+    mSyphonFbo.draw(0, 0);
     
     //===============================================
     // sound input draw
@@ -268,7 +268,7 @@ void testApp::draw()
     ofDrawBitmapString(s.str(), mGuiPanel.getPosition().x, mGuiPanel.getPosition().y + mGuiPanel.getHeight() + 20);
     
     // publish syphone server
-    mServer.publishTexture(&mMainFbo.getTextureReference());
+//    mServer.publishTexture(&mSyphonFbo.getTextureReference());
     
 }
 

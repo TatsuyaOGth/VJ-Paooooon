@@ -101,20 +101,21 @@ void testApp::setup()
     //===============================================
     // load texture resouces
     //===============================================
-    if (!media.loadImages("pictures")) OF_EXIT_APP(1);
-    if (!media.loadVideos("videos")) OF_EXIT_APP(1);
+//    if (!media.loadImages("pictures")) OF_EXIT_APP(1);
+//    if (!media.loadVideos("videos")) OF_EXIT_APP(1);
 //    shuffleTexture();
+    mLogo.loadImage("logo.png");
     
     //===============================================
     // create contents list
     //===============================================
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new PictureSlideShow(media.mFbo.getTextureReference())));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new PictureSlideShow(mLogo.getTextureReference())));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new GeometWave()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new KzdPatternExample()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationSphere()));
     mContents.push_back(shared_ptr<BaseContentsInterface>(new Orientation()));
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationCube(media.mFbo.getTextureReference())));
-    mContents.push_back(shared_ptr<BaseContentsInterface>(new BoxPerticle(media.mFbo.getTextureReference(), 200)));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new RotationCube(mLogo.getTextureReference())));
+    mContents.push_back(shared_ptr<BaseContentsInterface>(new BoxPerticle(mLogo.getTextureReference(), 200)));
     
     for (content_it it = mContents.begin(); it != mContents.end(); it++) {
         (*it)->updateSoundStatus(&MAIN_WAVE, MAIN_LEVEL);
@@ -129,13 +130,13 @@ void testApp::setup()
     mGuiPanel.setName("GUI");
     mParamGroup.setName("PARAMETERS");
     mParamGroup.add(mLevel.set("level", 0.0, 0.0, 1.0));
+    mParamGroup.add(mGain.set("gain", 1.0, 0.0, 10.0)); 
 #ifdef USE_OF_AUDIO_IN
-    mParamGroup.add(mGain.set("gain", 1.0, 0.0, 10.0));
     mParamGroup.add(mSmoothLevel.set("smooth_level", 0.8, 0.0, 1.0));
 #endif
-    mParamGroup.add(bDrawInputSoundStates.set("show_input_status", false));
-    mParamGroup.add(bVideo.set("video_mode", false));
-    mParamGroup.add(mSelVideo.set("select_video", 0, 0, media.mVideos.size() - 1));
+//    mParamGroup.add(bDrawInputSoundStates.set("show_input_status", false));
+//    mParamGroup.add(bVideo.set("video_mode", false));
+//    mParamGroup.add(mSelVideo.set("select_video", 0, 0, media.mVideos.size() - 1));
     mParamGroup.add(bNoise.set("noise", false));
     
     mGuiPanel.setup(mParamGroup);
@@ -157,9 +158,9 @@ void testApp::update()
     //===============================================
     share::elapsedTime = ofGetElapsedTimef();
     
-    media.bVideo = bVideo;
-    media.mSelVideo = mSelVideo;
-    media.update();
+//    media.bVideo = bVideo;
+//    media.mSelVideo = mSelVideo;
+//    media.update();
     
     
     //===============================================
@@ -198,7 +199,7 @@ void testApp::update()
             switch (m.getArgType(0)) {
                 case OFXOSC_TYPE_INT32: mLevel = m.getArgAsInt32(0); break;
                 case OFXOSC_TYPE_FLOAT: mLevel = m.getArgAsFloat(0); break;
-                default: break;
+                default: cout << "osc err" << endl; break;
             }
         }
         if (m.getAddress() == "/bang" && !didSendBang) {
@@ -233,12 +234,10 @@ void testApp::draw()
     // content draw
     //===============================================
     mMainFbo.begin();
-//    ofClear(0, 0, 0, 0);
-    ofBackground(0, 0, 0, 0);
-    ofSetColor(255, 255, 255, 255);
-    ofEnableAlphaBlending();
+    ofBackground(0, 0, 0);
+    ofSetColor(255, 255, 255);
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
     FOR_SWITCHES { mContents[*it]->draw(); }
-    ofDisableAlphaBlending();
     mMainFbo.end();
     
     mPostGlitch.generateFx();
